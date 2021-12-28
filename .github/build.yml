@@ -1,0 +1,53 @@
+name: build_module
+
+on:
+    # trigger on new tag matching *.*.*
+    push:
+        tags:
+            - 'v*.*.*'
+
+    # trigger based on manual execution
+    workflow_dispatch:
+ 
+jobs:
+    main: 
+        runs-on: ubuntu-latest
+        env:
+            MODULE_NAME: junk
+            MODULE_CONTEXT: .
+        steps:
+          # Initialize environment
+          - 
+            name: Checkout
+            uses: actions/checkout@v2
+          
+          
+          # get the tag name in format of vXX.XX.XX else use branch name
+          - 
+            name: Get version tag
+            id: gen_tag
+            run: |
+              if [[ ${{ github.ref }} =~ ^refs/tags/v(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\w+))? ]]; then
+                echo "TAG=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+              else
+                echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
+              fi
+              
+
+          # build the module and tag name
+          - 
+            name: Generate module name and version tag
+            id: gen_module_tag
+            run: |
+              echo "MODULE_TAG=${MODULE_NAME}:${TAG}" >> $GITHUB_ENV
+              echo "::set-output name=MODULE_TAG::${MODULE_NAME}:${TAG}"
+              echo "::set-output name=MODULE_CONTEXT::${MODULE_CONTEXT}"
+
+          # echo output of variables for debugging
+          - name: Echo tags
+            id: echo_tags
+            run: |
+              echo $MODULE_NAME
+              echo $TAG
+              echo $MODULE_TAG
+
