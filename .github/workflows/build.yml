@@ -4,7 +4,7 @@ on:
     # trigger on new tag matching *.*.*
     push:
         tags:
-            - 'v*.*.*'
+            - 'v*.*'
 
     # trigger based on manual execution
     workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
             id: gen_tag
             run: |
               if [[ ${{ github.ref }} =~ ^refs/tags/v(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\w+))? ]]; then
-                echo "TAG=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+                echo "TAG=${GITHUB_REF/refs\/tags\/v*/}" >> $GITHUB_ENV
               else
                 echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
               fi
