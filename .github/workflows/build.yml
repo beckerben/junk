@@ -27,7 +27,7 @@ jobs:
             name: Get version tag
             id: gen_tag
             run: |
-              if [[ ${{ github.ref }} =~ ^/v(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\w+))? ]]; then
+              if [[ ${{ github.ref }} =~ refs\/tags\/v[0-9]+\.[0-9]+ ]]; then
                 echo "TAG=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
               else
                 echo "TAG=TEST" >> $GITHUB_ENV
